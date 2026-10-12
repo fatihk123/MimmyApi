@@ -1,0 +1,38 @@
+﻿@model List<ApiProjeKampi.WebUI.Dtos.ServiceDtos.ResultWhyChooseMimmyDto>
+
+
+<section id="why-us" class="why-us section light-background">
+
+    <div class="container">
+
+        <div class="row gy-4">
+
+            <div class="col-lg-4" data-aos="fade-up" data-aos-delay="100">
+                <div class="why-box">
+                    <h3>Neden Mimmy?</h3>
+                    <p>
+                        Mimmy’de her detay, unutulmaz bir yemek deneyimi sunmak için özenle hazırlanır. Özenle seçilen malzemeler, ustalıkla hazırlanan lezzetlerle buluşur. Şık atmosferi ve profesyonel ekibiyle Mimmy, her ziyaretinizi özel, keyifli ve akılda kalıcı bir deneyime dönüştürür. Çünkü Mimmy her yemeği bir sanat eserine dönüştürür. Lezzetin zarafetle buluştuğu bu özel dünyayı keşfedin.
+                    </p>
+                    <div class="text-center">
+                        <a href="#" class="more-btn"><span>Learn More</span> <i class="bi bi-chevron-right"></i></a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-8 d-flex align-items-stretch">
+                <div class="row gy-4" data-aos="fade-up" data-aos-delay="200">
+                    @foreach (var item in Model)
+                    {
+                        <div class="col-xl-4">
+                            <div class="icon-box d-flex flex-column justify-content-center align-items-center">
+                                <i class="@item.IconUrl"></i>
+                                <h4>@item.Title</h4>
+                                <p>@item.Description</p>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

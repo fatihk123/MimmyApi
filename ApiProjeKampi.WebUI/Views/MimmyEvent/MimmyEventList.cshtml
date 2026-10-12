@@ -1,0 +1,54 @@
+﻿@model List<ResultMimmyEventDto>
+@{
+    ViewData["Title"] = "MimmyEventList";
+    Layout = "~/Views/AdminLayout/Index.cshtml";
+    int count = 0;
+}
+
+
+
+<section class="section">
+    <div class="section-body">
+        <div class="row">
+            <div class="col-12 col-md-12 col-lg-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4>Etkinlik Listesi</h4>
+                    </div>
+                    <div class="card-body">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Etkinlik Adı</th>
+                                    <th scope="col">Etkinlik Açıklama</th>
+                                    <th scope="col">Etkinlik Fiyat</th>
+                                    <th scope="col">Sil</th>
+                                    <th scope="col">Güncelle</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                    count++;
+                                    <tr>
+                                        <th scope="row">@count</th>
+                                        <td>@item.Title</td>
+                                        <td>@item.Description</td>
+                                        <td>@item.Price</td>
+                                        <td><a href="/MimmyEvent/DeleteMimmyEvent/@item.MimmyEventId/" class="btn btn-danger">Sil</a></td>
+                                        <td><a href="/MimmyEvent/UpdateMimmyEvent/@item.MimmyEventId/" class="btn btn-success">Güncelle</a></td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                        <a href="/MimmyEvent/CreateMimmyEvent/" class="btn btn-info">Yeni Etkinlik Ekle</a>
+                    </div>
+                </div>
+
+
+            </div>
+
+        </div>
+    </div>
+</section>

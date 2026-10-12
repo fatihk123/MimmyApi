@@ -1,0 +1,44 @@
+﻿@model GetProductByIdDto
+
+
+@{
+    ViewData["Title"] = "UpdateProduct";
+    Layout = "~/Views/AdminLayout/Index.cshtml";
+}
+
+
+
+<form asp-action="UpdateProduct" method="post">
+    <input type="hidden" asp-for="ProductId" />
+
+    <div class="form-group">
+        <label asp-for="ProductName">Ürün Adı</label>
+        <input asp-for="ProductName" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="ProductDescription">Ürün Açıklaması</label>
+        <input asp-for="ProductDescription" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Price">Fiyat</label>
+        <input asp-for="Price" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="ImageUrl">Resim Url</label>
+        <input asp-for="ImageUrl" class="form-control" />
+    </div>
+
+
+    <div>
+        <label>Kategori</label>
+        <select asp-for="CategoryId"
+                asp-items="ViewBag.Categories"
+                class="form-control">
+        </select>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Kaydet</button>
+</form>

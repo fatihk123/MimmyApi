@@ -1,0 +1,61 @@
+﻿@model GetAboutByIdDto
+@{
+    ViewData["Title"] = "UpdateAbout";
+    Layout = "~/Views/AdminLayout/Index.cshtml";
+}
+
+
+
+<section class="section">
+    <div class="section-body">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4>Hakkımızda Güncelleme Sayfası</h4>
+                    </div>
+                    <div class="card-body">
+
+                        <form method="post" asp-action="UpdateAbout">
+                            <input type="hidden" asp-for="AboutId" />
+
+                            <div class="form-group">
+                                <label>Başlık</label>
+                                <input type="text" asp-for="Title" class="form-control" />
+                            </div>
+
+                            <div class="form-group">
+                                <label>Video Kapak (URL)</label>
+                                <input type="text" asp-for="VideoCoverUrl" class="form-control" />
+                            </div>
+
+                            <div class="form-group">
+                                <label>Video Link (URL)</label>
+                                <input type="text" asp-for="VideoUrl" class="form-control" />
+                            </div>
+                            <div class="form-group">
+                                <label>Resim Yolu (URL)</label>
+                                <input type="text" asp-for="ImageUrl" class="form-control" />
+                            </div>
+                            <label>Açıklama</label>
+                            <textarea class="form-control" asp-for="Descrption" rows="5"></textarea>
+                            <br />
+
+                            <div class="form-group">
+                                <label>Rezervasyon Numarası</label>
+                                <input type="text" asp-for="ReservationNumber" class="form-control" />
+                            </div>
+
+                            <br />
+                            <button type="submit" class="btn btn-warning">
+                                Güncelle
+                            </button>
+
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
