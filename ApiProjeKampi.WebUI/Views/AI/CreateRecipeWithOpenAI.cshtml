@@ -7,10 +7,15 @@
     <div class="card">
         <div class="card-header"><h4>Yapay Zekâ Tarif Asistanı</h4></div>
         <div class="card-body">
+            <p class="text-muted">AI sağlayıcısı: @Model.ProviderName</p>
             <p>Elinizdeki malzemeleri yazın; Mimmy için bir yemek tarifi veya günlük menü önerisi hazırlayalım.</p>
             @if (!Model.IsConfigured)
             {
-                <div class="alert alert-info">OpenAI API anahtarı henüz yapılandırılmadı. Kurulum adımları README dosyasında bulunuyor.</div>
+                <div class="alert alert-info">@Model.ProviderName API anahtarı henüz yapılandırılmadı. Kurulum adımları README dosyasında bulunuyor.</div>
+            }
+            @if (Model.ProviderName == "Gemini" && !Model.IsConfigured)
+            {
+                <p><a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener noreferrer">Google AI Studio ile API anahtarı oluştur</a> · Ücretsiz kullanım kotası geçerlidir.</p>
             }
             <form asp-controller="AI" asp-action="CreateRecipeWithOpenAI" method="post">
                 <div asp-validation-summary="All" class="text-danger" role="alert"></div>

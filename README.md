@@ -13,7 +13,7 @@ Fatih Kılıç tarafından, Murat Yücedağ'ın [API Proje Kampı](https://www.y
 - Rezervasyon ve iletişim formları; veritabanına kayıt ve doğrulama.
 - Kategori, ürün, içerik, galeri, rezervasyon ve mesaj yönetimi.
 - Gerçek verilerle gösterge paneli ve restoran istatistikleri.
-- OpenAI ile malzemelere göre tarif ve günlük menü önerisi.
+- Gemini veya OpenAI ile malzemelere göre tarif ve günlük menü önerisi.
 - Müşteri mesajları için AI yanıt taslakları; taslaklar otomatik olarak gönderilmez.
 - SignalR üzerinden AI sohbet ve sınırlı sohbet geçmişi.
 - Korumalı POST formları, eksik kayıtlar için 404 ve API doğrulama hatalarının formda gösterilmesi.
@@ -21,7 +21,7 @@ Fatih Kılıç tarafından, Murat Yücedağ'ın [API Proje Kampı](https://www.y
 
 ## Teknolojiler
 
-.NET 8 · ASP.NET Core Web API & MVC · SQL Server/LocalDB · Entity Framework Core 8 · AutoMapper · FluentValidation · SignalR · Bootstrap · OpenAI Responses API.
+.NET 8 · ASP.NET Core Web API & MVC · SQL Server/LocalDB · Entity Framework Core 8 · AutoMapper · FluentValidation · SignalR · Bootstrap · Gemini API · OpenAI Responses API.
 
 ## Proje yapısı
 
@@ -98,9 +98,28 @@ dotnet run --project ApiProjeKampi.WebApi --launch-profile https
 
 Örnek veriler yalnızca Development ortamında, açıkça istendiğinde ve tüm ilgili tablolar boşsa eklenir. Mevcut restoran verileri değiştirilmez. Demo iletişim bilgileri, fiyatlar ve misafir yorumu örnektir.
 
-## OpenAI kurulumu
+## Ücretsiz AI denemesi: Gemini
 
-AI ekranları API anahtarı olmadan da açılır; anahtar tanımlanınca gerçek öneriler üretir. Anahtarı GitHub'a veya tarayıcı koduna eklemeyin.
+Varsayılan sağlayıcı **Gemini**, model **gemini-3.5-flash-lite**. Google bu model için sınırlı bir Free Tier sunar. Ücretsiz deneme için Google AI Studio projenizi ücretsiz kullanım katmanında tutun; uygulama faturalandırmayı etkinleştirmez veya ücretli sağlayıcıya otomatik geçiş yapmaz. Kotalar ve erişim koşulları hesabınıza göre değişebilir.
+
+1. [Google AI Studio API anahtarları](https://aistudio.google.com/apikey) sayfasını kendi Google hesabınızla açın ve API anahtarı oluşturun.
+2. Anahtarı sohbet mesajına veya GitHub'a yapıştırmayın. Yerel terminalde User Secrets ile kaydedin:
+
+```powershell
+dotnet user-secrets set "Gemini:ApiKey" "KENDI_GEMINI_ANAHTARINIZ" --project ApiProjeKampi.WebUI
+```
+
+3. Arayüz uygulamasını yeniden başlatın. Tarif, günlük menü, AI sohbet ve mesaj yanıt taslakları aynı Gemini bağlantısını kullanır.
+
+Alternatif ortam değişkenleri: `GEMINI_API_KEY` veya `Gemini__ApiKey`. Model: `Gemini:Model` / `Gemini__Model`. Sağlayıcı: `AI:Provider` / `AI__Provider`; değerler `Gemini` veya `OpenAI`.
+
+Ücretsiz Gemini katmanında gönderdiğiniz içerikler Google ürünlerini geliştirmek için kullanılabilir; denemelerde örnek veriler kullanın. Anahtar yalnızca sunucuda tutulur ve URL'ye eklenmez.
+
+Resmi kaynaklar: [fiyatlandırma ve ücretsiz katman](https://ai.google.dev/gemini-api/docs/pricing), [anahtar oluşturma](https://ai.google.dev/gemini-api/docs/api-key), [Gemini metin üretimi](https://ai.google.dev/api/generate-content).
+
+## İsteğe bağlı OpenAI kurulumu
+
+OpenAI kullanmak için `AI:Provider` ayarını `OpenAI` yapın. AI ekranları API anahtarı olmadan da açılır; anahtar tanımlanınca gerçek öneriler üretir. Anahtarı GitHub'a veya tarayıcı koduna eklemeyin.
 
 Yerel geliştirme için .NET User Secrets kullanın:
 
@@ -112,7 +131,7 @@ Alternatif: `OPENAI_API_KEY` veya `OpenAI__ApiKey` ortam değişkeni. Varsayıla
 
 Resmi kaynaklar: [metin üretimi](https://developers.openai.com/api/docs/guides/text), [GPT-4.1 mini](https://developers.openai.com/api/docs/models/gpt-4.1-mini).
 
-Tarif, günlük menü, mesaj taslağı ve sohbet istekleri OpenAI'ye gönderilir. API anahtarı yalnızca sunucuda kullanılır. Yanıtlar HTML olarak çalıştırılmaz. Responses isteklerinde `store=false` kullanılır. Bu uygulama e-posta göndermez.
+OpenAI seçildiğinde tarif, günlük menü, mesaj taslağı ve sohbet istekleri OpenAI'ye gönderilir. API anahtarı yalnızca sunucuda kullanılır. Yanıtlar HTML olarak çalıştırılmaz. Responses isteklerinde `store=false` kullanılır. Bu uygulama e-posta göndermez.
 
 ## Doğrulama
 

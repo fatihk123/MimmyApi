@@ -4,15 +4,16 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ApiProjeKampi.WebUI.Controllers;
 
-public class AIController(OpenAiService ai) : Controller
+public class AIController(AiTextService ai) : Controller
 {
     [HttpGet]
-    public IActionResult CreateRecipeWithOpenAI() => View(new AiRequestViewModel { IsConfigured = ai.IsConfigured });
+    public IActionResult CreateRecipeWithOpenAI() => View(new AiRequestViewModel { IsConfigured = ai.IsConfigured, ProviderName = ai.ProviderName });
 
     [HttpPost, ValidateAntiForgeryToken]
     public async Task<IActionResult> CreateRecipeWithOpenAI(AiRequestViewModel model, CancellationToken cancellationToken)
     {
         model.IsConfigured = ai.IsConfigured;
+        model.ProviderName = ai.ProviderName;
         if (!ModelState.IsValid) return View(model);
         try
         {
@@ -23,5 +24,5 @@ public class AIController(OpenAiService ai) : Controller
     }
 
     [HttpGet]
-    public IActionResult DailyMenu() => View("CreateRecipeWithOpenAI", new AiRequestViewModel { Prompt = "Türkiye, İtalya, Fransa ve Çin mutfaklarından dört farklı günlük menü öner.", IsConfigured = ai.IsConfigured });
+    public IActionResult DailyMenu() => View("CreateRecipeWithOpenAI", new AiRequestViewModel { Prompt = "Türkiye, İtalya, Fransa ve Çin mutfaklarından dört farklı günlük menü öner.", IsConfigured = ai.IsConfigured, ProviderName = ai.ProviderName });
 }

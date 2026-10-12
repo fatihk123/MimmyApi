@@ -3,14 +3,14 @@ using Microsoft.AspNetCore.SignalR;
 
 namespace ApiProjeKampi.WebUI.Models;
 
-public sealed class ChatHub(OpenAiService ai) : Hub
+public sealed class ChatHub(AiTextService ai) : Hub
 {
     public async Task SendMessage(string userMessage)
     {
         if (string.IsNullOrWhiteSpace(userMessage) || userMessage.Length > 2000)
             throw new HubException("Mesaj 1 ile 2000 karakter arasında olmalıdır.");
         if (!ai.IsConfigured)
-            throw new HubException("OpenAI API anahtarı henüz yapılandırılmadı.");
+            throw new HubException("Seçili AI sağlayıcısının API anahtarı henüz yapılandırılmadı.");
         var history = Context.Items.TryGetValue("History", out var value) ? (List<string>)value! : new List<string>();
         Context.Items["History"] = history;
         await Clients.Caller.SendAsync("ReceiveUserEcho", userMessage);

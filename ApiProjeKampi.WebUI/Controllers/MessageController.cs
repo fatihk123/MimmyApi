@@ -98,7 +98,7 @@ namespace ApiProjeKampi.WebUI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AnswerMessageWithOpenAI(int id, [FromServices] ApiProjeKampi.WebUI.Services.OpenAiService ai, CancellationToken cancellationToken)
+        public async Task<IActionResult> AnswerMessageWithOpenAI(int id, [FromServices] ApiProjeKampi.WebUI.Services.AiTextService ai, CancellationToken cancellationToken)
         {
             var response = await _httpClientFactory.CreateClient("Api").GetAsync("api/Messages/GetById?id=" + id, cancellationToken);
             if (response.StatusCode == System.Net.HttpStatusCode.NotFound) return NotFound();

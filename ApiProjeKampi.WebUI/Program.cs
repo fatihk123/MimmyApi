@@ -16,6 +16,13 @@ builder.Services.AddHttpClient<OpenAiService>(client =>
     client.Timeout = TimeSpan.FromSeconds(60);
 });
 
+builder.Services.AddHttpClient<GeminiService>(client =>
+{
+    client.BaseAddress = new Uri("https://generativelanguage.googleapis.com/");
+    client.Timeout = TimeSpan.FromSeconds(60);
+});
+builder.Services.AddScoped<AiTextService>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

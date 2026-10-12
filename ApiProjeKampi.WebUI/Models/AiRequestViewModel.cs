@@ -8,5 +8,6 @@ public sealed class AiRequestViewModel
     [StringLength(2000, MinimumLength = 3, ErrorMessage = "İstek 3 ile 2000 karakter arasında olmalıdır.")]
     public string Prompt { get; set; } = "";
     public string? Result { get; set; }
+    public string ProviderName { get; set; } = "Gemini";
     public bool IsConfigured { get; set; }
 }
