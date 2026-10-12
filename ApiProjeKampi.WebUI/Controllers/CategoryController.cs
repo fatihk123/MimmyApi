@@ -1,11 +1,11 @@
-﻿using ApiProjeKampi.WebUI.Dtos.CategoryDtos;
+using ApiProjeKampi.WebUI.Dtos.CategoryDtos;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Text;
 
 namespace ApiProjeKampi.WebUI.Controllers
 {
-    public class CategoryController : Controller
+    public class CategoryController : ApiProjeKampi.WebUI.Infrastructure.ApiUiController
     {
         private readonly IHttpClientFactory _httpClientFactory;
 
@@ -17,8 +17,8 @@ namespace ApiProjeKampi.WebUI.Controllers
 
         public async Task<IActionResult> CategoryList()
         {
-            var client = _httpClientFactory.CreateClient();
-            var responseMessage = await client.GetAsync("https://localhost:7192/api/Categories");
+            var client = _httpClientFactory.CreateClient("Api");
+            var responseMessage = await client.GetAsync("api/Categories");
             if (responseMessage.IsSuccessStatusCode)
             {
                 var jsonData = await responseMessage.Content.ReadAsStringAsync();
@@ -27,7 +27,7 @@ namespace ApiProjeKampi.WebUI.Controllers
             }
 
 
-            return View();
+            return View(new List<ResultCategoryDto>());
         }
         [HttpGet]
         public IActionResult CreateCategory()
@@ -38,22 +38,25 @@ namespace ApiProjeKampi.WebUI.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateCategory(CreateCategoryDto createCategoryDto)
         {
-            var client = _httpClientFactory.CreateClient();
+            var client = _httpClientFactory.CreateClient("Api");
             var jsonData = JsonConvert.SerializeObject(createCategoryDto);
             StringContent stringContent = new StringContent(jsonData, Encoding.UTF8, "application/json");
-            var responseMessage = await client.PostAsync("https://localhost:7192/api/Categories", stringContent);
+            var responseMessage = await client.PostAsync("api/Categories", stringContent);
             if (responseMessage.IsSuccessStatusCode)
             {
                 return RedirectToAction("CategoryList");
             }
-            return View();
+            await AddApiErrorsAsync(responseMessage);
+            return View(createCategoryDto);
 
         }
 
+        [HttpPost]
         public async Task<IActionResult> DeleteCategory(int id)
         {
-            var client = _httpClientFactory.CreateClient();
-            await client.DeleteAsync("https://localhost:7192/api/Categories?id=" + id);
+            var client = _httpClientFactory.CreateClient("Api");
+            var responseMessage = await client.DeleteAsync("api/Categories?id=" + id);
+            if (!responseMessage.IsSuccessStatusCode) return StatusCode((int)responseMessage.StatusCode);
             return RedirectToAction("CategoryList");
 
 
@@ -62,11 +65,12 @@ namespace ApiProjeKampi.WebUI.Controllers
         [HttpGet]
         public async Task<IActionResult> UpdateCategory(int id)
         {
-            var client = _httpClientFactory.CreateClient();
-            var responseMessage = await client.GetAsync("https://localhost:7192/api/Categories/GetCategory?id=" + id);
+            var client = _httpClientFactory.CreateClient("Api");
+            var responseMessage = await client.GetAsync("api/Categories/GetCategory?id=" + id);
+            if (!responseMessage.IsSuccessStatusCode) return StatusCode((int)responseMessage.StatusCode);
 
             var jsonData = await responseMessage.Content.ReadAsStringAsync();
-            var value = JsonConvert.DeserializeObject<GetCategoryByIdDto>(jsonData);
+            var value = JsonConvert.DeserializeObject<UpdateCategoryDto>(jsonData);
             return View(value);
 
 
@@ -74,10 +78,11 @@ namespace ApiProjeKampi.WebUI.Controllers
         [HttpPost]
         public async Task<IActionResult> UpdateCategory(UpdateCategoryDto updateCategoryDto)
         {
-            var client = _httpClientFactory.CreateClient();
+            var client = _httpClientFactory.CreateClient("Api");
             var jsonData = JsonConvert.SerializeObject(updateCategoryDto);
             StringContent stringContent = new StringContent(jsonData, Encoding.UTF8, "application/json");
-            await client.PutAsync("https://localhost:7192/api/Categories", stringContent);
+            var responseMessage = await client.PutAsync("api/Categories", stringContent);
+            if (!responseMessage.IsSuccessStatusCode) { await AddApiErrorsAsync(responseMessage); return View(updateCategoryDto); }
 
             return RedirectToAction("CategoryList");
 

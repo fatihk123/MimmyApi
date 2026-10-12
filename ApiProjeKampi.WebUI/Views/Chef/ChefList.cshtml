@@ -1,4 +1,4 @@
-﻿@model List<ResultChefDto>
+@model List<ResultChefDto>
 
 @{
     ViewData["Title"] = "ChefList";
@@ -37,7 +37,7 @@
                                         <td>@item.NameSurName</td>
                                         <td>@item.Title</td>
                                         <td>@item.Description</td>
-                                        <td><a href="/Chef/DeleteChef/@item.ChefId/" class="btn btn-danger">Sil</a></td>
+                                        <td><form action="/Chef/DeleteChef/@item.ChefId/" method="post" class="d-inline">@Html.AntiForgeryToken()<button type="submit" class="btn btn-danger">Sil</button></form></td>
                                         <td><a href="/Chef/UpdateChef/@item.ChefId/" class="btn btn-success">Güncelle</a></td>
                                     </tr>
                                 }

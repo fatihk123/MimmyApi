@@ -1,4 +1,4 @@
-﻿@model List<ResultTestimonialDto>
+@model List<ResultTestimonialDto>
 
 @{
     ViewData["Title"] = "TestimonialList";
@@ -35,7 +35,7 @@
                                         <td>@item.NameSurName</td>
                                         <td>@item.Title</td>
                                         <td>@item.Comment</td>
-                                        <td><a href="/Testimonial/DeleteTestimonial/@item.TestimonialId/" class="btn btn-danger">Sil</a></td>
+                                        <td><form action="/Testimonial/DeleteTestimonial/@item.TestimonialId/" method="post" class="d-inline">@Html.AntiForgeryToken()<button type="submit" class="btn btn-danger">Sil</button></form></td>
                                         <td><a href="/Testimonial/UpdateTestimonial/@item.TestimonialId/" class="btn btn-success">Güncelle</a></td>
                                     </tr>
                                 }

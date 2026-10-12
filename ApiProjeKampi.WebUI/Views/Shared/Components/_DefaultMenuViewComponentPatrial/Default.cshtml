@@ -1,23 +1,15 @@
-﻿<section id="menu" class="menu section">
-
-    <!-- Section Title -->
-    <div class="container section-title" data-aos="fade-up">
-        <h2>Our Menu</h2>
-        <p><span>Check Our</span> <span class="description-title">Yummy Menu</span></p>
-    </div><!-- End Section Title -->
-
+@model MenuViewModel
+<section id="menu" class="menu section">
+    <div class="container section-title"><h2>Menümüz</h2><p>Mimmy <span class="description-title">Lezzetleri</span></p></div>
     <div class="container">
-
-        @await Component.InvokeAsync("_DefaultMenuCategoryComponentPartial")
-
-
-
-        @await Component.InvokeAsync("_DefaultMenuProductComponentPartial")
-
-        
-
-       
-
+        <ul class="nav nav-tabs justify-content-center">
+            <li class="nav-item"><button class="nav-link active" data-bs-toggle="tab" data-bs-target="#menu-all" type="button">Tümü</button></li>
+            @foreach (var category in Model.Categories) { <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#menu-@category.CategoryId" type="button">@category.CategoryName</button></li> }
+        </ul>
+        <div class="tab-content mt-4">
+            <div class="tab-pane fade show active" id="menu-all">@await Html.PartialAsync("_MenuProducts", Model.Products)</div>
+            @foreach (var category in Model.Categories)
+            { <div class="tab-pane fade" id="menu-@category.CategoryId">@await Html.PartialAsync("_MenuProducts", Model.Products.Where(x => x.CategoryId == category.CategoryId).ToList())</div> }
+        </div>
     </div>
-
 </section>

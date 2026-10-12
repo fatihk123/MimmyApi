@@ -1,4 +1,4 @@
-﻿using ApiProjeKampi.WebApi.Context;
+using ApiProjeKampi.WebApi.Context;
 using ApiProjeKampi.WebApi.Dtos.ImageDtos;
 using ApiProjeKampi.WebApi.Entities;
 using AutoMapper;
@@ -37,6 +37,7 @@ namespace ApiProjeKampi.WebApi.Controllers
         public IActionResult DeleteImage(int id)
         {
             var value = _context.Images.Find(id);
+            if (value is null) return NotFound();
             _context.Images.Remove(value);
             _context.SaveChanges();
             return Ok("Resim Silme İşlemi Başarılı");
@@ -45,6 +46,7 @@ namespace ApiProjeKampi.WebApi.Controllers
         public IActionResult UpdateImage(UpdateImageDto updateImageDto)
         {
             var value = _mapper.Map<Image>(updateImageDto);
+            if (!_context.Images.Any(x => x.ImageId == value.ImageId)) return NotFound();
             _context.Images.Update(value);
             _context.SaveChanges();
             return Ok("Resim Güncelleme İşlemi Başarılı");
@@ -53,6 +55,7 @@ namespace ApiProjeKampi.WebApi.Controllers
         public IActionResult GetImage(int id)
         {
             var value = _context.Images.Find(id);
+            if (value is null) return NotFound();
             return Ok(value);
         }
 

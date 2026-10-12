@@ -1,4 +1,4 @@
-﻿using ApiProjeKampi.WebApi.Context;
+using ApiProjeKampi.WebApi.Context;
 using ApiProjeKampi.WebApi.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -32,6 +32,7 @@ namespace ApiProjeKampi.WebApi.Controllers
         public IActionResult DeleteTestimonial(int id)
         {
             var value = _context.Testimonials.Find(id);
+            if (value is null) return NotFound();
             _context.Testimonials.Remove(value);
             _context.SaveChanges();
             return Ok("Referans Silme İşlemi Başarılı");
@@ -39,6 +40,7 @@ namespace ApiProjeKampi.WebApi.Controllers
         [HttpPut]
         public IActionResult UpdateTestimonial(Testimonial testimonial)
         {
+            if (!_context.Testimonials.Any(x => x.TestimonialId == testimonial.TestimonialId)) return NotFound();
             _context.Testimonials.Update(testimonial);
             _context.SaveChanges();
             return Ok("Referans Güncelleme İşlemi Başarılı");
@@ -47,6 +49,7 @@ namespace ApiProjeKampi.WebApi.Controllers
         public IActionResult GetTestimonial(int id)
         {
             var value = _context.Testimonials.Find(id);
+            if (value is null) return NotFound();
             return Ok(value);
         }
     }

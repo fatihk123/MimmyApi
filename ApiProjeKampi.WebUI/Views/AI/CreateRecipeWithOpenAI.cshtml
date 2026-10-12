@@ -1,0 +1,29 @@
+@model AiRequestViewModel
+@{
+    ViewData["Title"] = "Yapay Zekâ Tarif Asistanı";
+    Layout = "~/Views/AdminLayout/Index.cshtml";
+}
+<section class="section">
+    <div class="card">
+        <div class="card-header"><h4>Yapay Zekâ Tarif Asistanı</h4></div>
+        <div class="card-body">
+            <p>Elinizdeki malzemeleri yazın; Mimmy için bir yemek tarifi veya günlük menü önerisi hazırlayalım.</p>
+            @if (!Model.IsConfigured)
+            {
+                <div class="alert alert-info">OpenAI API anahtarı henüz yapılandırılmadı. Kurulum adımları README dosyasında bulunuyor.</div>
+            }
+            <form asp-controller="AI" asp-action="CreateRecipeWithOpenAI" method="post">
+                <div asp-validation-summary="All" class="text-danger" role="alert"></div>
+                <label asp-for="Prompt">Malzemeler ve tercihler</label>
+                <textarea asp-for="Prompt" class="form-control" rows="4" maxlength="2000" placeholder="Örnek: domates, makarna, fesleğen; 2 kişilik vejetaryen tarif" required></textarea>
+                <button type="submit" class="btn btn-primary mt-3">Öneri Oluştur</button>
+            </form>
+            @if (!string.IsNullOrWhiteSpace(Model.Result))
+            {
+                <hr />
+                <h5>Tarif önerisi</h5>
+                <div style="white-space: pre-wrap" aria-live="polite">@Model.Result</div>
+            }
+        </div>
+    </div>
+</section>

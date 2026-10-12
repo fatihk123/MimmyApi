@@ -1,8 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 
 namespace ApiProjeKampi.WebUI.ViewComponents.AdminLayoutViewComponent
 {
-    public class _SidebarAdminLayoutComponentPartial: ViewComponent
+    public class _SidebarAdminLayoutComponentPartial : ViewComponent
     {
         public IViewComponentResult Invoke()
         {

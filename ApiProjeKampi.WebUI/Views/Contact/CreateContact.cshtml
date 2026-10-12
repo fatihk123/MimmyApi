@@ -1,4 +1,4 @@
-﻿@model CreateContactDto
+@model CreateContactDto
 
 @{
     ViewData["Title"] = "CreateContact";
@@ -15,6 +15,8 @@
                     </div>
                     <div class="card-body">
                         <form method="post">
+<div asp-validation-summary="All" class="text-danger" role="alert"></div>
+                            @Html.AntiForgeryToken()
                             <label>Adres</label>
                             <input type="text" asp-for="Address" class="form-control" />
                             <br />
@@ -38,4 +40,3 @@
         </div>
     </div>
 </section>
-

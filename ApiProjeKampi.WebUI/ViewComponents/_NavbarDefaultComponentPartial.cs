@@ -1,8 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 
 namespace ApiProjeKampi.WebUI.ViewComponents
 {
-    public class _NavbarDefaultComponentPartial:ViewComponent
+    public class _NavbarDefaultComponentPartial : ViewComponent
     {
 
         public IViewComponentResult Invoke()

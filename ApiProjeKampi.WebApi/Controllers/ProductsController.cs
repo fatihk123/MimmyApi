@@ -1,4 +1,4 @@
-﻿using ApiProjeKampi.WebApi.Context;
+using ApiProjeKampi.WebApi.Context;
 using ApiProjeKampi.WebApi.Dtos.MessageDtos;
 using ApiProjeKampi.WebApi.Dtos.ProductDtos;
 using ApiProjeKampi.WebApi.Entities;
@@ -41,7 +41,7 @@ namespace ApiProjeKampi.WebApi.Controllers
         {
             var value = _mapper.Map<Product>(createProductDto);
 
-            var validationResult = await _validator.ValidateAsync(value); 
+            var validationResult = await _validator.ValidateAsync(value);
 
             if (validationResult.IsValid)
             {
@@ -58,6 +58,7 @@ namespace ApiProjeKampi.WebApi.Controllers
         public IActionResult DeleteProduct(int id)
         {
             var value = _context.Products.Find(id);
+            if (value is null) return NotFound();
             _context.Products.Remove(value);
             _context.SaveChanges();
             return Ok("Silme İşlemi Başarılı");
@@ -68,13 +69,14 @@ namespace ApiProjeKampi.WebApi.Controllers
         public async Task<IActionResult> UpdateProduct(UpdateProductDto updateProductDto)
         {
             var value = _mapper.Map<Product>(updateProductDto);
-            var validationResult =await _validator.ValidateAsync(value);
+            var validationResult = await _validator.ValidateAsync(value);
             if (!validationResult.IsValid)
             {
                 return BadRequest(validationResult.Errors.Select(x => x.ErrorMessage));
             }
             else
             {
+                if (!_context.Products.Any(x => x.ProductId == value.ProductId)) return NotFound();
                 _context.Products.Update(value);
                 _context.SaveChanges();
                 return Ok("Ürün güncelleme işlemi başarılı");
@@ -87,16 +89,17 @@ namespace ApiProjeKampi.WebApi.Controllers
         public IActionResult GetByIdProduct(int id)
         {
             var value = _context.Products.Find(id);
+            if (value is null) return NotFound();
             return Ok(_mapper.Map<ResultProductDto>(value));
         }
 
-        
+
 
         [HttpGet("GetProductsWithCategory")]
 
-       public IActionResult GetProductsWithCategory()
+        public IActionResult GetProductsWithCategory()
         {
-            var value = _context.Products.Include(x=>x.Category).ToList();
+            var value = _context.Products.Include(x => x.Category).ToList();
             return Ok(_mapper.Map<List<ResultProductWithCategoryDto>>(value));
 
         }

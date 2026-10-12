@@ -1,4 +1,4 @@
-﻿@model CreateChefDto
+@model CreateChefDto
 
 @{
     ViewData["Title"] = "CreateChef";
@@ -16,6 +16,8 @@
                     </div>
                     <div class="card-body">
                         <form method="post">
+<div asp-validation-summary="All" class="text-danger" role="alert"></div>
+                            @Html.AntiForgeryToken()
                             <label>Şef Adı</label>
                             <input type="text" asp-for="NameSurName" class="form-control" />
                             <br />
@@ -36,4 +38,3 @@
         </div>
     </div>
 </section>
-

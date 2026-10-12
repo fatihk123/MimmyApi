@@ -1,4 +1,4 @@
-﻿using ApiProjeKampi.WebApi.Context;
+using ApiProjeKampi.WebApi.Context;
 using ApiProjeKampi.WebApi.Dtos.AboutDtos;
 using ApiProjeKampi.WebApi.Entities;
 using AutoMapper;
@@ -40,6 +40,7 @@ namespace ApiProjeKampi.WebApi.Controllers
         public IActionResult DeleteAbout(int id)
         {
             var value = _context.Abouts.Find(id);
+            if (value is null) return NotFound();
             _context.Abouts.Remove(value);
             _context.SaveChanges();
             return Ok("Silme İşlemi Başarılı");
@@ -48,6 +49,7 @@ namespace ApiProjeKampi.WebApi.Controllers
         public IActionResult UpdateAbout(UpdateAboutDto updateAboutDto)
         {
             var value = _mapper.Map<About>(updateAboutDto);
+            if (!_context.Abouts.Any(x => x.AboutId == value.AboutId)) return NotFound();
             _context.Abouts.Update(value);
             _context.SaveChanges();
             return Ok("Güncelleme İşlemi Başarılı");
@@ -57,6 +59,7 @@ namespace ApiProjeKampi.WebApi.Controllers
         public IActionResult GetAbout(int id)
         {
             var value = _context.Abouts.Find(id);
+            if (value is null) return NotFound();
             return Ok(value);
         }
 

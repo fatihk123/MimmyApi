@@ -1,4 +1,4 @@
-﻿using ApiProjeKampi.WebUI.Dtos.TestimonialDtos;
+using ApiProjeKampi.WebUI.Dtos.TestimonialDtos;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
@@ -15,15 +15,15 @@ namespace ApiProjeKampi.WebUI.ViewComponents
         public async Task<IViewComponentResult> InvokeAsync()
         {
 
-            var client = _httpClientFactory.CreateClient();
-            var responseMessage = await client.GetAsync("https://localhost:7192/api/Testimonials");
+            var client = _httpClientFactory.CreateClient("Api");
+            var responseMessage = await client.GetAsync("api/Testimonials");
             if (responseMessage.IsSuccessStatusCode)
             {
                 var jsonData = responseMessage.Content.ReadAsStringAsync();
                 var result = JsonConvert.DeserializeObject<List<ResultTestimonialDto>>(jsonData.Result);
                 return View(result);
             }
-            return View();
+            return View(new List<ResultTestimonialDto>());
         }
     }
 }

@@ -1,0 +1,52 @@
+@{
+    ViewData["Title"] = "Mimmy AI Sohbet";
+    Layout = "~/Views/AdminLayout/Index.cshtml";
+}
+<div class="card">
+    <div class="card-header"><h4>Mimmy AI Sohbet</h4></div>
+    <div class="card-body">
+        <div id="chat" role="log" aria-live="polite" style="min-height:240px;max-height:480px;overflow-y:auto;white-space:pre-wrap"></div>
+        <p id="chat-status" role="status">Bağlanıyor…</p>
+        <form id="chat-form" class="d-flex">
+            <label for="chat-input" class="sr-only">Mesajınız</label>
+            <input id="chat-input" class="form-control mr-2" maxlength="2000" placeholder="Mesajınızı yazın…" required />
+            <button id="chat-send" class="btn btn-primary" disabled>Gönder</button>
+        </form>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/@@microsoft/signalr@8.0.7/dist/browser/signalr.min.js"></script>
+<script>
+(() => {
+    const log = document.getElementById('chat');
+    const status = document.getElementById('chat-status');
+    const input = document.getElementById('chat-input');
+    const button = document.getElementById('chat-send');
+    const connection = new signalR.HubConnectionBuilder().withUrl('/chathub').withAutomaticReconnect().build();
+    function append(who, text) {
+        const line = document.createElement('p');
+        line.textContent = who + ': ' + text;
+        log.appendChild(line);
+        log.scrollTop = log.scrollHeight;
+    }
+    connection.on('ReceiveUserEcho', text => append('Sen', text));
+    connection.on('CompleteMessage', text => append('Mimmy', text));
+    connection.onreconnecting(() => { button.disabled = true; status.textContent = 'Yeniden bağlanıyor…'; });
+    connection.onreconnected(() => { button.disabled = false; status.textContent = 'Bağlandı. Yeni sohbet başladı.'; });
+    connection.onclose(() => { button.disabled = true; status.textContent = 'Bağlantı kesildi. Sayfayı yenileyin.'; });
+    connection.start().then(() => { button.disabled = false; status.textContent = 'Hazır'; })
+        .catch(() => { status.textContent = 'Sohbet bağlantısı kurulamadı. Sayfayı yenileyin.'; });
+    document.getElementById('chat-form').addEventListener('submit', async event => {
+        event.preventDefault();
+        const message = input.value.trim();
+        if (!message || button.disabled) return;
+        button.disabled = true;
+        status.textContent = 'Yanıt hazırlanıyor…';
+        try {
+            await connection.invoke('SendMessage', message);
+            input.value = '';
+            status.textContent = 'Hazır';
+        } catch (error) { status.textContent = error.message || 'Yanıt alınamadı.'; }
+        finally { button.disabled = connection.state !== signalR.HubConnectionState.Connected; input.focus(); }
+    });
+})();
+</script>

@@ -1,8 +1,8 @@
-﻿namespace ApiProjeKampi.WebApi.Dtos.ImageDtos
+namespace ApiProjeKampi.WebApi.Dtos.ImageDtos
 {
     public class CreateImageDto
     {
-        public string Title { get; set; }
-        public string ImageUrl { get; set; }
+        public string Title { get; set; } = string.Empty;
+        public string ImageUrl { get; set; } = string.Empty;
     }
 }

@@ -1,4 +1,4 @@
-﻿@model CreateFeatureDto
+@model CreateFeatureDto
 @{
     ViewData["Title"] = "CreateFeature";
     Layout = "~/Views/AdminLayout/Index.cshtml";
@@ -15,6 +15,7 @@
                     </div>
                     <div class="card-body">
                         <form method="post" asp-action="CreateFeature">
+<div asp-validation-summary="All" class="text-danger" role="alert"></div>
                             <label>Başlık</label>
                             <input type="text" asp-for="Title" class="form-control" />
                             <br />

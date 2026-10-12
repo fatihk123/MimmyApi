@@ -1,4 +1,4 @@
-﻿@model GetTestimonialByIdDto
+@model UpdateTestimonialDto
 @{
     ViewData["Title"] = "UpdateTestimonial";
     Layout = "~/Views/AdminLayout/Index.cshtml";
@@ -14,6 +14,8 @@
                     </div>
                     <div class="card-body">
                         <form method="post">
+                            <div asp-validation-summary="All" class="text-danger"></div>
+                            @Html.AntiForgeryToken()
                             <input type="hidden" asp-for="TestimonialId" />
                             <label>Referans Adı Soyadı</label>
                             <input type="text" asp-for="NameSurName" class="form-control" />

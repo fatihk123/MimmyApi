@@ -1,0 +1,15 @@
+@model CreateMessageDto
+<form asp-controller="Default" asp-action="SendMessage" method="post" class="php-email-form mt-4">
+    <div class="row gy-4">
+        <div class="col-md-6"><input asp-for="NameSurname" class="form-control" placeholder="Adınız ve soyadınız" required maxlength="100" /></div>
+        <div class="col-md-6"><input asp-for="Email" type="email" class="form-control" placeholder="E-posta adresiniz" required maxlength="254" /></div>
+        <div class="col-md-12"><input asp-for="Subject" class="form-control" placeholder="Konu" required maxlength="150" /></div>
+        <div class="col-md-12"><textarea asp-for="MessageDetails" class="form-control" rows="6" placeholder="Mesajınız" required maxlength="4000"></textarea></div>
+        <div class="col-md-12 text-center">
+            <div class="loading">Gönderiliyor…</div>
+            <div class="error-message"></div>
+            <div class="sent-message">Mesajınız alındı. Teşekkür ederiz!</div>
+            <button type="submit">Mesaj Gönder</button>
+        </div>
+    </div>
+</form>

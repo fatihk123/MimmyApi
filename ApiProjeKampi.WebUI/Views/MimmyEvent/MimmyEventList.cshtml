@@ -1,4 +1,4 @@
-﻿@model List<ResultMimmyEventDto>
+@model List<ResultMimmyEventDto>
 @{
     ViewData["Title"] = "MimmyEventList";
     Layout = "~/Views/AdminLayout/Index.cshtml";
@@ -36,7 +36,7 @@
                                         <td>@item.Title</td>
                                         <td>@item.Description</td>
                                         <td>@item.Price</td>
-                                        <td><a href="/MimmyEvent/DeleteMimmyEvent/@item.MimmyEventId/" class="btn btn-danger">Sil</a></td>
+                                        <td><form action="/MimmyEvent/DeleteMimmyEvent/@item.MimmyEventId/" method="post" class="d-inline">@Html.AntiForgeryToken()<button type="submit" class="btn btn-danger">Sil</button></form></td>
                                         <td><a href="/MimmyEvent/UpdateMimmyEvent/@item.MimmyEventId/" class="btn btn-success">Güncelle</a></td>
                                     </tr>
                                 }

@@ -1,4 +1,4 @@
-﻿@model GetReservationByIdDto
+@model UpdateReservationDto
 @{
     ViewData["Title"] = "UpdateReservation";
     Layout = "~/Views/AdminLayout/Index.cshtml";
@@ -10,10 +10,12 @@
             <div class="col-12 col-md-12 col-lg-12">
                 <div class="card">
                     <div class="card-header">
-                        <h4>Kategori Güncelleme Sayfası</h4>
+                        <h4>Rezervasyon Güncelleme Sayfası</h4>
                     </div>
                     <div class="card-body">
                         <form method="post">
+                            <div asp-validation-summary="All" class="text-danger"></div>
+                            @Html.AntiForgeryToken()
                             <input type="hidden" asp-for="ReservationID" />
                             <label>Misafir Adı & Soyadı</label>
                             <input type="text" asp-for="NameSurname" class="form-control" />
@@ -37,7 +39,7 @@
                             <input type="text" asp-for="Message" class="form-control" />
                             <br />
                             <label>Rezervasyon Durumu</label>
-                            <input type="text" asp-for="ReservationStatus" readonly class="form-control" />
+                            <select asp-for="ReservationStatus" class="form-control"><option>Beklemede</option><option>Onaylandı</option><option>İptal Edildi</option></select>
                             <br />
                             <button class="btn btn-primary">Rezervasyon Güncelle</button>
                         </form>

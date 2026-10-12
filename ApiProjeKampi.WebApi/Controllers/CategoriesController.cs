@@ -1,4 +1,4 @@
-﻿using ApiProjeKampi.WebApi.Context;
+using ApiProjeKampi.WebApi.Context;
 using ApiProjeKampi.WebApi.Dtos.CategoryDtos;
 using ApiProjeKampi.WebApi.Entities;
 using AutoMapper;
@@ -36,6 +36,8 @@ namespace ApiProjeKampi.WebApi.Controllers
         public IActionResult DeleteCategory(int id)
         {
             var value = _context.Categories.Find(id);
+            if (value is null) return NotFound();
+            if (_context.Products.Any(x => x.CategoryId == id)) return Conflict("Bu kategoriye bağlı ürünler var. Önce ürünleri taşıyın veya silin.");
             _context.Categories.Remove(value);
             _context.SaveChanges();
             return Ok("Kategori Silme İşlemi Başarılı");
@@ -44,6 +46,7 @@ namespace ApiProjeKampi.WebApi.Controllers
         public IActionResult UpdateCategory(UpdateCategoryDto updateCategoryDto)
         {
             var value = _mapper.Map<Category>(updateCategoryDto);
+            if (!_context.Categories.Any(x => x.CategoryId == value.CategoryId)) return NotFound();
             _context.Categories.Update(value);
             _context.SaveChanges();
             return Ok("Kategori Güncelleme İşlemi Başarılı");
@@ -52,6 +55,7 @@ namespace ApiProjeKampi.WebApi.Controllers
         public IActionResult GetCategory(int id)
         {
             var value = _context.Categories.Find(id);
+            if (value is null) return NotFound();
             return Ok(value);
         }
 

@@ -1,4 +1,4 @@
-﻿using ApiProjeKampi.WebApi.Context;
+using ApiProjeKampi.WebApi.Context;
 using ApiProjeKampi.WebApi.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -33,6 +33,7 @@ namespace ApiProjeKampi.WebApi.Controllers
         public IActionResult DeleteNotification(int id)
         {
             var value = _context.Notifications.Find(id);
+            if (value is null) return NotFound();
             _context.Notifications.Remove(value);
             _context.SaveChanges();
             return Ok("Bildirim Silme İşlemi Başarılı");
@@ -40,6 +41,7 @@ namespace ApiProjeKampi.WebApi.Controllers
         [HttpPut]
         public IActionResult UpdateNotification(Notification notification)
         {
+            if (!_context.Notifications.Any(x => x.NotificationId == notification.NotificationId)) return NotFound();
             _context.Notifications.Update(notification);
             _context.SaveChanges();
             return Ok("Bildirim Güncelleme İşlemi Başarılı");
@@ -48,6 +50,7 @@ namespace ApiProjeKampi.WebApi.Controllers
         public IActionResult GetNotification(int id)
         {
             var value = _context.Categories.Find(id);
+            if (value is null) return NotFound();
             return Ok(value);
         }
 

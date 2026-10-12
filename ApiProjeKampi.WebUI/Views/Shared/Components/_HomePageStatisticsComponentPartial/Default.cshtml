@@ -1,0 +1,8 @@
+@model DashboardViewModel
+<section id="stats" class="stats section dark-background">
+    <img src="/yummy-red-1.0.0/assets/img/stats-bg.jpg" alt="" />
+    <div class="container position-relative"><div class="row gy-4">
+        @foreach (var stat in new[] { ("Misafir", Model.GuestCount), ("Menüdeki Lezzetler", Model.ProductCount), ("Rezervasyon", Model.ReservationCount), ("Şef", Model.ChefCount) })
+        { <div class="col-lg-3 col-md-6"><div class="stats-item text-center"><span data-purecounter-start="0" data-purecounter-end="@stat.Item2" data-purecounter-duration="1" class="purecounter">@stat.Item2</span><p>@stat.Item1</p></div></div> }
+    </div></div>
+</section>

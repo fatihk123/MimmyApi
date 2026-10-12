@@ -1,4 +1,4 @@
-﻿using ApiProjeKampi.WebApi.Context;
+using ApiProjeKampi.WebApi.Context;
 using ApiProjeKampi.WebApi.Dtos.FeatureDtos;
 using ApiProjeKampi.WebApi.Entities;
 using AutoMapper;
@@ -43,6 +43,7 @@ namespace ApiProjeKampi.WebApi.Controllers
         public IActionResult DeleteFeature(int id)
         {
             var value = _context.Features.Find(id);
+            if (value is null) return NotFound();
             _context.Features.Remove(value);
             _context.SaveChanges();
             return Ok();
@@ -51,6 +52,7 @@ namespace ApiProjeKampi.WebApi.Controllers
         public IActionResult UpdateFeature(UpdateFeatureDto updateFeatureDto)
         {
             var value = _mapper.Map<Feature>(updateFeatureDto);
+            if (!_context.Features.Any(x => x.FeatureId == value.FeatureId)) return NotFound();
             _context.Features.Update(value);
             _context.SaveChanges();
             return Ok("Güncelleme İşlemi Başarılı");
@@ -61,6 +63,7 @@ namespace ApiProjeKampi.WebApi.Controllers
         public IActionResult GetFeature(int id)
         {
             var value = _context.Features.Find(id);
+            if (value is null) return NotFound();
             return Ok(_mapper.Map<ResultFeatureDto>(value));
         }
     }

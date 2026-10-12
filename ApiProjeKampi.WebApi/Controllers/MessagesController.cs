@@ -1,4 +1,4 @@
-﻿using ApiProjeKampi.WebApi.Context;
+using ApiProjeKampi.WebApi.Context;
 using ApiProjeKampi.WebApi.Dtos.MessageDtos;
 using ApiProjeKampi.WebApi.Entities;
 using AutoMapper;
@@ -29,15 +29,19 @@ namespace ApiProjeKampi.WebApi.Controllers
 
         [HttpPost]
         public IActionResult CreateMessage(CreateMessageDto createMessageDto)
-        {  var value = _mapper.Map<Message>(createMessageDto);
+        {
+            createMessageDto.SendDate = DateTime.UtcNow;
+            createMessageDto.IsRead = false;
+            var value = _mapper.Map<Message>(createMessageDto);
             _context.Messages.Add(value);
             _context.SaveChanges();
             return Ok("Ekleme İşlemi Başarılı");
         }
         [HttpDelete]
         public IActionResult DeleteMessage(int id)
-        { 
+        {
             var value = _context.Messages.Find(id);
+            if (value is null) return NotFound();
             _context.Messages.Remove(value);
             _context.SaveChanges();
             return Ok("Silme İşlemi Başarılı");
@@ -47,6 +51,7 @@ namespace ApiProjeKampi.WebApi.Controllers
         public IActionResult UpdateMessage(UpdateMessageDto updateMessageDto)
         {
             var value = _mapper.Map<Message>(updateMessageDto);
+            if (!_context.Messages.Any(x => x.MessageId == value.MessageId)) return NotFound();
             _context.Messages.Update(value);
             _context.SaveChanges();
             return Ok("Güncelleme İşlemi Başarılı");
@@ -55,7 +60,8 @@ namespace ApiProjeKampi.WebApi.Controllers
         public IActionResult GetByIdMessage(int id)
         {
             var value = _context.Messages.Find(id);
-            return Ok( _mapper.Map<ResultMessageDto>(value));
+            if (value is null) return NotFound();
+            return Ok(_mapper.Map<ResultMessageDto>(value));
         }
 
 

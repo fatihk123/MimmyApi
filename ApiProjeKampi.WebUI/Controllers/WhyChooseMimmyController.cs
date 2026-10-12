@@ -1,11 +1,11 @@
-﻿using ApiProjeKampi.WebUI.Dtos.ServiceDtos;
+using ApiProjeKampi.WebUI.Dtos.ServiceDtos;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Text;
 
 namespace ApiProjeKampi.WebUI.Controllers
 {
-    public class WhyChooseMimmyController : Controller
+    public class WhyChooseMimmyController : ApiProjeKampi.WebUI.Infrastructure.ApiUiController
     {
         private readonly IHttpClientFactory _httpClientFactory;
 
@@ -17,8 +17,8 @@ namespace ApiProjeKampi.WebUI.Controllers
 
         public async Task<IActionResult> WhyChooseMimmyList()
         {
-            var client = _httpClientFactory.CreateClient();
-            var responseMessage = await client.GetAsync("https://localhost:7192/api/Services");
+            var client = _httpClientFactory.CreateClient("Api");
+            var responseMessage = await client.GetAsync("api/Services");
             if (responseMessage.IsSuccessStatusCode)
             {
                 var jsonData = await responseMessage.Content.ReadAsStringAsync();
@@ -27,7 +27,7 @@ namespace ApiProjeKampi.WebUI.Controllers
             }
 
 
-            return View();
+            return View(new List<ResultWhyChooseMimmyDto>());
         }
         [HttpGet]
         public IActionResult CreateWhyChooseMimmy()
@@ -38,22 +38,25 @@ namespace ApiProjeKampi.WebUI.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateWhyChooseMimmy(CreateWhyChooseMimmyDto createWhyChooseMimmyDto)
         {
-            var client = _httpClientFactory.CreateClient();
+            var client = _httpClientFactory.CreateClient("Api");
             var jsonData = JsonConvert.SerializeObject(createWhyChooseMimmyDto);
             StringContent stringContent = new StringContent(jsonData, Encoding.UTF8, "application/json");
-            var responseMessage = await client.PostAsync("https://localhost:7192/api/Services", stringContent);
+            var responseMessage = await client.PostAsync("api/Services", stringContent);
             if (responseMessage.IsSuccessStatusCode)
             {
                 return RedirectToAction("WhyChooseMimmyList");
             }
-            return View();
+            await AddApiErrorsAsync(responseMessage);
+            return View(createWhyChooseMimmyDto);
 
         }
 
+        [HttpPost]
         public async Task<IActionResult> DeleteWhyChooseMimmy(int id)
         {
-            var client = _httpClientFactory.CreateClient();
-            await client.DeleteAsync("https://localhost:7192/api/Services?id=" + id);
+            var client = _httpClientFactory.CreateClient("Api");
+            var responseMessage = await client.DeleteAsync("api/Services?id=" + id);
+            if (!responseMessage.IsSuccessStatusCode) return StatusCode((int)responseMessage.StatusCode);
             return RedirectToAction("WhyChooseMimmyList");
 
 
@@ -62,11 +65,12 @@ namespace ApiProjeKampi.WebUI.Controllers
         [HttpGet]
         public async Task<IActionResult> UpdateWhyChooseMimmy(int id)
         {
-            var client = _httpClientFactory.CreateClient();
-            var responseMessage = await client.GetAsync("https://localhost:7192/api/Services/GetService?id=" + id);
+            var client = _httpClientFactory.CreateClient("Api");
+            var responseMessage = await client.GetAsync("api/Services/GetService?id=" + id);
+            if (!responseMessage.IsSuccessStatusCode) return StatusCode((int)responseMessage.StatusCode);
 
             var jsonData = await responseMessage.Content.ReadAsStringAsync();
-            var value = JsonConvert.DeserializeObject<GetWhyChooseMimmyByIdDto>(jsonData);
+            var value = JsonConvert.DeserializeObject<UpdateWhyChooseMimmyDto>(jsonData);
             return View(value);
 
 
@@ -74,10 +78,11 @@ namespace ApiProjeKampi.WebUI.Controllers
         [HttpPost]
         public async Task<IActionResult> UpdateWhyChooseMimmy(UpdateWhyChooseMimmyDto updateWhyChooseMimmyDto)
         {
-            var client = _httpClientFactory.CreateClient();
+            var client = _httpClientFactory.CreateClient("Api");
             var jsonData = JsonConvert.SerializeObject(updateWhyChooseMimmyDto);
             StringContent stringContent = new StringContent(jsonData, Encoding.UTF8, "application/json");
-            await client.PutAsync("https://localhost:7192/api/Services", stringContent);
+            var responseMessage = await client.PutAsync("api/Services", stringContent);
+            if (!responseMessage.IsSuccessStatusCode) { await AddApiErrorsAsync(responseMessage); return View(updateWhyChooseMimmyDto); }
 
             return RedirectToAction("WhyChooseMimmyList");
 

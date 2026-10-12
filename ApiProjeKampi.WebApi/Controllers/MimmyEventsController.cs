@@ -1,4 +1,4 @@
-﻿using ApiProjeKampi.WebApi.Context;
+using ApiProjeKampi.WebApi.Context;
 using ApiProjeKampi.WebApi.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -31,6 +31,7 @@ namespace ApiProjeKampi.WebApi.Controllers
         public IActionResult DeleteMimmyEvent(int id)
         {
             var value = _context.MimmyEvents.Find(id);
+            if (value is null) return NotFound();
             _context.MimmyEvents.Remove(value);
             _context.SaveChanges();
             return Ok("Etkinlik Silme İşlemi Başarılı");
@@ -38,6 +39,7 @@ namespace ApiProjeKampi.WebApi.Controllers
         [HttpPut]
         public IActionResult UpdateMimmyEvent(MimmyEvent mimmyEvent)
         {
+            if (!_context.MimmyEvents.Any(x => x.MimmyEventId == mimmyEvent.MimmyEventId)) return NotFound();
             _context.MimmyEvents.Update(mimmyEvent);
             _context.SaveChanges();
             return Ok("Etkinlik Güncelleme İşlemi Başarılı");
@@ -46,6 +48,7 @@ namespace ApiProjeKampi.WebApi.Controllers
         public IActionResult GetMimmyEvent(int id)
         {
             var value = _context.MimmyEvents.Find(id);
+            if (value is null) return NotFound();
             return Ok(value);
         }
 

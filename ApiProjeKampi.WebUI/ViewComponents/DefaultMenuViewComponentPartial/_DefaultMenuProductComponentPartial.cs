@@ -1,10 +1,10 @@
-﻿using ApiProjeKampi.WebUI.Dtos.ProductDtos;
+using ApiProjeKampi.WebUI.Dtos.ProductDtos;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
 namespace ApiProjeKampi.WebUI.ViewComponents.DefaultMenuViewComponentPartial
 {
-    public class _DefaultMenuProductComponentPartial:ViewComponent
+    public class _DefaultMenuProductComponentPartial : ViewComponent
     {
         private readonly IHttpClientFactory _httpClientFactory;
 
@@ -16,8 +16,8 @@ namespace ApiProjeKampi.WebUI.ViewComponents.DefaultMenuViewComponentPartial
         public async Task<IViewComponentResult> InvokeAsync()
         {
 
-            var client = _httpClientFactory.CreateClient();
-            var responseMessage = await client.GetAsync("https://localhost:7192/api/Products");
+            var client = _httpClientFactory.CreateClient("Api");
+            var responseMessage = await client.GetAsync("api/Products");
             if (responseMessage.IsSuccessStatusCode)
             {
                 var jsonData = await responseMessage.Content.ReadAsStringAsync();
@@ -27,7 +27,7 @@ namespace ApiProjeKampi.WebUI.ViewComponents.DefaultMenuViewComponentPartial
             }
 
 
-            return View();
+            return View(new List<ResultProductDto>());
         }
 
 

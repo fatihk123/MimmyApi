@@ -1,13 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using ApiProjeKampi.WebUI.Dtos.ContactDtos;
+using Microsoft.AspNetCore.Mvc;
+namespace ApiProjeKampi.WebUI.ViewComponents;
 
-namespace ApiProjeKampi.WebUI.ViewComponents
+public class _FooterDefaultComponentPartial(IHttpClientFactory httpClientFactory) : ViewComponent
 {
-    public class _FooterDefaultComponentPartial : ViewComponent
+    public async Task<IViewComponentResult> InvokeAsync()
     {
-        public IViewComponentResult Invoke()
-        {
-            return View();
-
-        }
+        var contacts = await httpClientFactory.CreateClient("Api").GetFromJsonAsync<List<ResultContactDto>>("api/Contacts");
+        return View(contacts?.FirstOrDefault() ?? new ResultContactDto());
     }
 }

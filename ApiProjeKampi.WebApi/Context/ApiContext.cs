@@ -1,4 +1,4 @@
-﻿using ApiProjeKampi.WebApi.Entities;
+using ApiProjeKampi.WebApi.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace ApiProjeKampi.WebApi.Context
@@ -6,9 +6,12 @@ namespace ApiProjeKampi.WebApi.Context
     public class ApiContext : DbContext
     {
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        public ApiContext(DbContextOptions<ApiContext> options) : base(options) { }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            optionsBuilder.UseSqlServer("Server=Fatih;Initial Catalog=MimyProjeKampiDb;Integrated Security=true;TrustServerCertificate=True;");
+            modelBuilder.Entity<Product>().Property(x => x.Price).HasPrecision(18, 2);
+            modelBuilder.Entity<MimmyEvent>().Property(x => x.Price).HasPrecision(18, 2);
         }
 
         public DbSet<Category> Categories { get; set; }

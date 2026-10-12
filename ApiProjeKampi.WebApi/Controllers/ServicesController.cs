@@ -1,4 +1,4 @@
-﻿using ApiProjeKampi.WebApi.Context;
+using ApiProjeKampi.WebApi.Context;
 using ApiProjeKampi.WebApi.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -31,6 +31,7 @@ namespace ApiProjeKampi.WebApi.Controllers
         public IActionResult DeleteService(int id)
         {
             var value = _context.Services.Find(id);
+            if (value is null) return NotFound();
             _context.Services.Remove(value);
             _context.SaveChanges();
             return Ok("Hizmet Silme İşlemi Başarılı");
@@ -38,6 +39,7 @@ namespace ApiProjeKampi.WebApi.Controllers
         [HttpPut]
         public IActionResult UpdateService(Service service)
         {
+            if (!_context.Services.Any(x => x.ServiceId == service.ServiceId)) return NotFound();
             _context.Services.Update(service);
             _context.SaveChanges();
             return Ok("Kategori Güncelleme İşlemi Başarılı");
@@ -46,6 +48,7 @@ namespace ApiProjeKampi.WebApi.Controllers
         public IActionResult GetService(int id)
         {
             var value = _context.Services.Find(id);
+            if (value is null) return NotFound();
             return Ok(value);
         }
     }

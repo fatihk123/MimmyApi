@@ -1,4 +1,4 @@
-﻿@model CreateMessageDto
+@model CreateMessageDto
 
 @{
     ViewData["Title"] = "CreateMessage";
@@ -16,6 +16,8 @@
                     </div>
                     <div class="card-body">
                         <form method="post">
+<div asp-validation-summary="All" class="text-danger" role="alert"></div>
+                            @Html.AntiForgeryToken()
                             <label>Ad Soyad</label>
                             <input type="text" asp-for="NameSurname" class="form-control" />
                             <br />

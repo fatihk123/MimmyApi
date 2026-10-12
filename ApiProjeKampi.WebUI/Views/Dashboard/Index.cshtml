@@ -1,0 +1,27 @@
+@model DashboardViewModel
+@{
+    ViewData["Title"] = "Mimmy Yönetim Paneli";
+    Layout = "~/Views/AdminLayout/Index.cshtml";
+}
+<section class="section">
+    <h2>Mimmy Yönetim Paneli</h2>
+    <div class="row mt-4">
+        @foreach (var stat in new[] { ("Ürünler", Model.ProductCount), ("Rezervasyonlar", Model.ReservationCount), ("Bekleyen Rezervasyonlar", Model.PendingReservationCount), ("Okunmamış Mesajlar", Model.UnreadMessageCount) })
+        { <div class="col-md-3"><div class="card"><div class="card-body"><h6>@stat.Item1</h6><h2>@stat.Item2</h2></div></div></div> }
+    </div>
+    <div class="card"><div class="card-header"><h4>Son Rezervasyonlar</h4></div><div class="card-body table-responsive">
+        <table class="table"><thead><tr><th>Misafir</th><th>Tarih</th><th>Kişi</th><th>Durum</th><th></th></tr></thead><tbody>
+        @foreach (var item in Model.LatestReservations)
+        { <tr><td>@item.NameSurname</td><td>@item.ReservationDate.ToString("dd.MM.yyyy") @item.ReservationTime</td><td>@item.CountofPeople</td><td>@item.ReservationStatus</td><td><a asp-controller="Reservation" asp-action="UpdateReservation" asp-route-id="@item.ReservationID">Aç</a></td></tr> }
+        </tbody></table><a asp-controller="Reservation" asp-action="ReservationList">Tüm rezervasyonlar</a>
+    </div></div>
+    <div class="card"><div class="card-header"><h4>Son Mesajlar</h4></div><div class="card-body">
+        @foreach (var item in Model.LatestMessages) { <p><a asp-controller="Message" asp-action="OpenMessage" asp-route-id="@item.MessageId">@item.Subject</a> · @item.NameSurname</p> }
+        <a asp-controller="Message" asp-action="MessageList">Tüm mesajlar</a>
+    </div></div>
+    <div class="card"><div class="card-header"><h4>Yapay Zekâ Araçları</h4></div><div class="card-body">
+        <a asp-controller="AI" asp-action="CreateRecipeWithOpenAI" class="btn btn-primary">Tarif Önerisi</a>
+        <a asp-controller="AI" asp-action="DailyMenu" class="btn btn-info">Günlük Menü Önerisi</a>
+        <a asp-controller="Chat" asp-action="SendChatWithAI" class="btn btn-success">AI Sohbet</a>
+    </div></div>
+</section>

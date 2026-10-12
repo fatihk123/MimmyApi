@@ -1,4 +1,4 @@
-﻿using ApiProjeKampi.WebUI.Models;
+using ApiProjeKampi.WebUI.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 

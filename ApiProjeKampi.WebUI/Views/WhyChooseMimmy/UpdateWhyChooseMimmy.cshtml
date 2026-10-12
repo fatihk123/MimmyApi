@@ -1,4 +1,4 @@
-﻿@model GetWhyChooseMimmyByIdDto
+@model UpdateWhyChooseMimmyDto
 
 @{
     ViewData["Title"] = "UpdateWhyChooseMimmy";
@@ -16,6 +16,8 @@
                     </div>
                     <div class="card-body">
                         <form method="post">
+                            <div asp-validation-summary="All" class="text-danger"></div>
+                            @Html.AntiForgeryToken()
                             <input type="hidden" asp-for="ServiceId" />
                             <label>Kategori Adı</label>
                             <input type="text" asp-for="Title" class="form-control" />

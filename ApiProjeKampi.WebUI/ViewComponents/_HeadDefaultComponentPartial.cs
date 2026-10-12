@@ -1,8 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 
 namespace ApiProjeKampi.WebUI.ViewComponents
 {
-    public class _HeadDefaultComponentPartial:ViewComponent
+    public class _HeadDefaultComponentPartial : ViewComponent
     {
 
         public IViewComponentResult Invoke()

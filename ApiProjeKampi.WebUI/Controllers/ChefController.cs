@@ -1,4 +1,4 @@
-﻿using ApiProjeKampi.WebUI.Dtos.ChefDtos;
+using ApiProjeKampi.WebUI.Dtos.ChefDtos;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Net.Http;
@@ -6,7 +6,7 @@ using System.Text;
 
 namespace ApiProjeKampi.WebUI.Controllers
 {
-    public class ChefController : Controller
+    public class ChefController : ApiProjeKampi.WebUI.Infrastructure.ApiUiController
     {
         private readonly IHttpClientFactory _httpClientFactory;
 
@@ -18,8 +18,8 @@ namespace ApiProjeKampi.WebUI.Controllers
 
         public async Task<IActionResult> ChefList()
         {
-            var client = _httpClientFactory.CreateClient();
-            var responseMessage = await client.GetAsync("https://localhost:7192/api/Chefs");
+            var client = _httpClientFactory.CreateClient("Api");
+            var responseMessage = await client.GetAsync("api/Chefs");
             if (responseMessage.IsSuccessStatusCode)
             {
                 var jsonData = await responseMessage.Content.ReadAsStringAsync();
@@ -28,7 +28,7 @@ namespace ApiProjeKampi.WebUI.Controllers
             }
 
 
-            return View();
+            return View(new List<ResultChefDto>());
         }
         [HttpGet]
         public IActionResult CreateChef()
@@ -39,22 +39,25 @@ namespace ApiProjeKampi.WebUI.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateChef(CreateChefDto createChefDto)
         {
-            var client = _httpClientFactory.CreateClient();
+            var client = _httpClientFactory.CreateClient("Api");
             var jsonData = JsonConvert.SerializeObject(createChefDto);
             StringContent stringContent = new StringContent(jsonData, Encoding.UTF8, "application/json");
-            var responseMessage = await client.PostAsync("https://localhost:7192/api/Chefs", stringContent);
+            var responseMessage = await client.PostAsync("api/Chefs", stringContent);
             if (responseMessage.IsSuccessStatusCode)
             {
                 return RedirectToAction("ChefList");
             }
-            return View();
+            await AddApiErrorsAsync(responseMessage);
+            return View(createChefDto);
 
         }
 
+        [HttpPost]
         public async Task<IActionResult> DeleteChef(int id)
         {
-            var client = _httpClientFactory.CreateClient();
-            await client.DeleteAsync("https://localhost:7192/api/Chefs?id=" + id);
+            var client = _httpClientFactory.CreateClient("Api");
+            var responseMessage = await client.DeleteAsync("api/Chefs?id=" + id);
+            if (!responseMessage.IsSuccessStatusCode) return StatusCode((int)responseMessage.StatusCode);
             return RedirectToAction("ChefList");
 
 
@@ -63,11 +66,12 @@ namespace ApiProjeKampi.WebUI.Controllers
         [HttpGet]
         public async Task<IActionResult> UpdateChef(int id)
         {
-            var client = _httpClientFactory.CreateClient();
-            var responseMessage = await client.GetAsync("https://localhost:7192/api/Chefs/GetChef?id=" + id);
+            var client = _httpClientFactory.CreateClient("Api");
+            var responseMessage = await client.GetAsync("api/Chefs/GetChef?id=" + id);
+            if (!responseMessage.IsSuccessStatusCode) return StatusCode((int)responseMessage.StatusCode);
 
             var jsonData = await responseMessage.Content.ReadAsStringAsync();
-            var value = JsonConvert.DeserializeObject<GetChefByIdDto>(jsonData);
+            var value = JsonConvert.DeserializeObject<UpdateChefDto>(jsonData);
             return View(value);
 
 
@@ -75,10 +79,11 @@ namespace ApiProjeKampi.WebUI.Controllers
         [HttpPost]
         public async Task<IActionResult> UpdateChef(UpdateChefDto updateChefDto)
         {
-            var client = _httpClientFactory.CreateClient();
+            var client = _httpClientFactory.CreateClient("Api");
             var jsonData = JsonConvert.SerializeObject(updateChefDto);
             StringContent stringContent = new StringContent(jsonData, Encoding.UTF8, "application/json");
-            await client.PutAsync("https://localhost:7192/api/Chefs", stringContent);
+            var responseMessage = await client.PutAsync("api/Chefs", stringContent);
+            if (!responseMessage.IsSuccessStatusCode) { await AddApiErrorsAsync(responseMessage); return View(updateChefDto); }
 
             return RedirectToAction("ChefList");
 

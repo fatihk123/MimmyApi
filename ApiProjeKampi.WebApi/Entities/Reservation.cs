@@ -1,17 +1,17 @@
-﻿namespace ApiProjeKampi.WebApi.Entities
+namespace ApiProjeKampi.WebApi.Entities
 {
     public class Reservation
     {
 
         public int ReservationID { get; set; }
-        public string NameSurname { get; set; }
-        public string Email { get; set; }
-        public string PhoneNumber { get; set; }
+        public string NameSurname { get; set; } = string.Empty;
+        public string Email { get; set; } = string.Empty;
+        public string PhoneNumber { get; set; } = string.Empty;
         public DateTime ReservationDate { get; set; }
-        public string ReservationTime { get; set; }
+        public string ReservationTime { get; set; } = string.Empty;
         public int CountofPeople { get; set; }
-        public string Message { get; set; }
-        public string ReservationStatus { get; set; }
+        public string Message { get; set; } = string.Empty;
+        public string ReservationStatus { get; set; } = string.Empty;
 
 
 

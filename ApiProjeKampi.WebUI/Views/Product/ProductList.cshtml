@@ -1,4 +1,4 @@
-﻿@model List<ResultProductDto>
+@model List<ResultProductDto>
 @{
     ViewData["Title"] = "ProductList";
     Layout = "~/Views/AdminLayout/Index.cshtml";
@@ -33,7 +33,7 @@
                                         <td>@item.ProductName</td>
                                         <td>@item.Price</td>
                                         <td>@item.CategoryName</td>
-                                        <td><a href="/Product/DeleteProduct/@item.ProductId" class="btn btn-danger">Sil</a></td>
+                                        <td><form action="/Product/DeleteProduct/@item.ProductId" method="post" class="d-inline">@Html.AntiForgeryToken()<button type="submit" class="btn btn-danger">Sil</button></form></td>
                                         <td><a href="/Product/UpdateProduct/@item.ProductId" class="btn btn-success">Güncelle</a></td>
                                     </tr>
                                 }

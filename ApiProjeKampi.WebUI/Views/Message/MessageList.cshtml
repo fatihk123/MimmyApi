@@ -1,4 +1,4 @@
-﻿@model List<ResultMessageDto>
+@model List<ResultMessageDto>
 
 @{
     ViewData["Title"] = "MessageList";
@@ -12,7 +12,7 @@
             <div class="col-12 col-md-12 col-lg-12">
                 <div class="card">
                     <div class="card-header">
-                        <h4>Kategori Listesi</h4>
+                        <h4>Müşteri Mesajları</h4>
                     </div>
                     <div class="card-body">
                         <table class="table">
@@ -39,13 +39,13 @@
                                         <td>@item.Subject</td>
                                         <td>@item.SendDate.ToString("dd-MMM-yyyy")</td>
                                         <td><a href="/Message/OpenMessage/@item.MessageId/" class="btn btn-info">Mesajı Aç</a></td>
-                                        <td><a href="/Message/DeleteMessage/@item.MessageId/" class="btn btn-danger">Sil</a></td>
+                                        <td><form action="/Message/DeleteMessage/@item.MessageId/" method="post" class="d-inline">@Html.AntiForgeryToken()<button type="submit" class="btn btn-danger">Sil</button></form></td>
                                         <td><a href="/Message/UpdateMessage/@item.MessageId/" class="btn btn-success">Güncelle</a></td>
                                     </tr>
                                 }
                             </tbody>
                         </table>
-                        <a href="/Message/CreateMessage/" class="btn btn-info">Yeni Kategori Ekle</a>
+                        <a href="/Message/CreateMessage/" class="btn btn-info">Yeni Mesaj Ekle</a>
                     </div>
                 </div>
 
@@ -55,4 +55,3 @@
         </div>
     </div>
 </section>
-

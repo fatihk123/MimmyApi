@@ -1,9 +1,20 @@
+using ApiProjeKampi.WebUI.Services;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews(options => options.Filters.Add(new Microsoft.AspNetCore.Mvc.AutoValidateAntiforgeryTokenAttribute()));
+builder.Services.AddSignalR();
 
-builder.Services.AddHttpClient();
+builder.Services.AddHttpClient("Api", client =>
+{
+    client.BaseAddress = new Uri((builder.Configuration["Api:BaseUrl"] ?? "https://localhost:7192/").TrimEnd('/') + "/");
+});
+
+builder.Services.AddHttpClient<OpenAiService>(client =>
+{
+    client.BaseAddress = new Uri("https://api.openai.com/");
+    client.Timeout = TimeSpan.FromSeconds(60);
+});
 
 var app = builder.Build();
 
@@ -22,8 +33,10 @@ app.UseRouting();
 
 app.UseAuthorization();
 
+app.MapHub<ApiProjeKampi.WebUI.Models.ChatHub>("/chathub");
+
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=Default}/{action=Index}/{id?}");
 
 app.Run();

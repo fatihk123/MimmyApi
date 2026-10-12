@@ -1,4 +1,4 @@
-﻿using ApiProjeKampi.WebApi.Context;
+using ApiProjeKampi.WebApi.Context;
 using ApiProjeKampi.WebApi.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -17,7 +17,7 @@ namespace ApiProjeKampi.WebApi.Controllers
             _context = context;
         }
         [HttpGet]
-        public IActionResult ChefList() 
+        public IActionResult ChefList()
         {
             var values = _context.Chefs.ToList();
             return Ok(values);
@@ -33,16 +33,18 @@ namespace ApiProjeKampi.WebApi.Controllers
         }
         [HttpDelete]
         public IActionResult DeleteChef(int id)
-        { 
-            var value=_context.Chefs.Find(id);
+        {
+            var value = _context.Chefs.Find(id);
+            if (value is null) return NotFound();
             _context.Chefs.Remove(value);
             _context.SaveChanges();
             return Ok("Şef Silme İşlemi Başarılı");
 
         }
         [HttpPut]
-        public IActionResult UpdateChef (Chef chef)
+        public IActionResult UpdateChef(Chef chef)
         {
+            if (!_context.Chefs.Any(x => x.ChefId == chef.ChefId)) return NotFound();
             _context.Chefs.Update(chef);
             _context.SaveChanges();
             return Ok("Şef Güncelleme İşlemi Başarılı");
@@ -51,7 +53,8 @@ namespace ApiProjeKampi.WebApi.Controllers
         [HttpGet("GetChef")]
         public IActionResult GetChef(int id)
         {
-           return Ok( _context.Chefs.Find(id));
+            var value = _context.Chefs.Find(id);
+            return value is null ? NotFound() : Ok(value);
 
         }
 

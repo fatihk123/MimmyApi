@@ -1,4 +1,4 @@
-﻿@model GetContactByIdDto
+@model UpdateContactDto
 
 @{
     ViewData["Title"] = "UpdateContact";
@@ -15,6 +15,8 @@
                     </div>
                     <div class="card-body">
                         <form method="post">
+                            <div asp-validation-summary="All" class="text-danger"></div>
+                            @Html.AntiForgeryToken()
                             <input type="hidden" asp-for="ContactId" />
                             <label>Adres</label>
                             <input type="text" asp-for="Address" class="form-control" />
@@ -39,4 +41,3 @@
         </div>
     </div>
 </section>
-

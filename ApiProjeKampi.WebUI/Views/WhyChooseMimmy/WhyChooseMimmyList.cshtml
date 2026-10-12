@@ -1,4 +1,4 @@
-﻿@model List<ResultWhyChooseMimmyDto>
+@model List<ResultWhyChooseMimmyDto>
 @{
     ViewData["Title"] = "WhyChooseMimmyList";
     Layout = "~/Views/AdminLayout/Index.cshtml";
@@ -32,7 +32,7 @@
                                         <th scope="row">@count</th>
                                         <td>@item.Title</td>
                                         <td>@item.Description</td>
-                                        <td><a href="/WhyChooseMimmy/DeleteWhyChooseMimmy/@item.ServiceId/" class="btn btn-danger">Sil</a></td>
+                                        <td><form action="/WhyChooseMimmy/DeleteWhyChooseMimmy/@item.ServiceId/" method="post" class="d-inline">@Html.AntiForgeryToken()<button type="submit" class="btn btn-danger">Sil</button></form></td>
                                         <td><a href="/WhyChooseMimmy/UpdateWhyChooseMimmy/@item.ServiceId/" class="btn btn-success">Güncelle</a></td>
                                     </tr>
                                 }

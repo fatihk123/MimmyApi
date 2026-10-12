@@ -1,4 +1,4 @@
-﻿using ApiProjeKampi.WebApi.Dtos.AboutDtos;
+using ApiProjeKampi.WebApi.Dtos.AboutDtos;
 using ApiProjeKampi.WebApi.Dtos.CategoryDtos;
 using ApiProjeKampi.WebApi.Dtos.FeatureDtos;
 using ApiProjeKampi.WebApi.Dtos.ImageDtos;
@@ -29,7 +29,7 @@ namespace ApiProjeKampi.WebApi.Mapping
             CreateMap<Product, CreateProductDto>().ReverseMap();
             CreateMap<Product, GetByIdProductDto>().ReverseMap();
             CreateMap<UpdateProductDto, Product>().ForMember(dest => dest.Category, opt => opt.Ignore());
-            CreateMap<Product, ResultProductWithCategoryDto>().ForMember(x => x.CategoryName, y => y.MapFrom(z => z.Category.CategoryName)).ReverseMap();
+            CreateMap<Product, ResultProductWithCategoryDto>().ForMember(x => x.CategoryName, y => y.MapFrom(z => z.Category == null ? "Kategorisiz" : z.Category.CategoryName)).ReverseMap();
 
             CreateMap<Contact, ResultContactDto>().ReverseMap();
             CreateMap<Contact, CreateContactDto>().ReverseMap();
@@ -41,7 +41,7 @@ namespace ApiProjeKampi.WebApi.Mapping
             CreateMap<Category, UpdateCategoryDto>().ReverseMap();
             CreateMap<Category, GetByIdCategoryDto>().ReverseMap();
 
-         
+
             CreateMap<About, ResultAboutDto>().ReverseMap();
             CreateMap<About, CreateAboutDto>().ReverseMap();
             CreateMap<About, UpdateAboutDto>().ReverseMap();

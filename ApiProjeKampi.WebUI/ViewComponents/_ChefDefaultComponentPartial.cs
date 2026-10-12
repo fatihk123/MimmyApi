@@ -1,11 +1,11 @@
-﻿using ApiProjeKampi.WebUI.Dtos.ChefDtos;
+using ApiProjeKampi.WebUI.Dtos.ChefDtos;
 using ApiProjeKampi.WebUI.Dtos.ServiceDtos;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
 namespace ApiProjeKampi.WebUI.ViewComponents
 {
-    public class _ChefDefaultComponentPartial:ViewComponent
+    public class _ChefDefaultComponentPartial : ViewComponent
     {
 
 
@@ -18,8 +18,8 @@ namespace ApiProjeKampi.WebUI.ViewComponents
         public async Task<IViewComponentResult> InvokeAsync()
         {
 
-            var client = _httpClientFactory.CreateClient();
-            var responseMessage = await client.GetAsync("https://localhost:7192/api/Chefs");
+            var client = _httpClientFactory.CreateClient("Api");
+            var responseMessage = await client.GetAsync("api/Chefs");
             if (responseMessage.IsSuccessStatusCode)
             {
                 var jsonData = responseMessage.Content.ReadAsStringAsync();
@@ -28,7 +28,7 @@ namespace ApiProjeKampi.WebUI.ViewComponents
             }
 
 
-            return View();
+            return View(new List<ResultChefDto>());
         }
 
     }

@@ -1,11 +1,11 @@
-﻿using ApiProjeKampi.WebUI.Dtos.MessageDtos;
+using ApiProjeKampi.WebUI.Dtos.MessageDtos;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Text;
 
 namespace ApiProjeKampi.WebUI.Controllers
 {
-    public class MessageController : Controller
+    public class MessageController : ApiProjeKampi.WebUI.Infrastructure.ApiUiController
     {
         private readonly IHttpClientFactory _httpClientFactory;
 
@@ -17,8 +17,8 @@ namespace ApiProjeKampi.WebUI.Controllers
 
         public async Task<IActionResult> MessageList()
         {
-            var client = _httpClientFactory.CreateClient();
-            var responseMessage = await client.GetAsync("https://localhost:7192/api/Messages");
+            var client = _httpClientFactory.CreateClient("Api");
+            var responseMessage = await client.GetAsync("api/Messages");
             if (responseMessage.IsSuccessStatusCode)
             {
                 var jsonData = await responseMessage.Content.ReadAsStringAsync();
@@ -27,7 +27,7 @@ namespace ApiProjeKampi.WebUI.Controllers
             }
 
 
-            return View();
+            return View(new List<ResultMessageDto>());
         }
         [HttpGet]
         public IActionResult CreateMessage()
@@ -38,22 +38,25 @@ namespace ApiProjeKampi.WebUI.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateMessage(CreateMessageDto createMessageDto)
         {
-            var client = _httpClientFactory.CreateClient();
+            var client = _httpClientFactory.CreateClient("Api");
             var jsonData = JsonConvert.SerializeObject(createMessageDto);
             StringContent stringContent = new StringContent(jsonData, Encoding.UTF8, "application/json");
-            var responseMessage = await client.PostAsync("https://localhost:7192/api/Messages", stringContent);
+            var responseMessage = await client.PostAsync("api/Messages", stringContent);
             if (responseMessage.IsSuccessStatusCode)
             {
                 return RedirectToAction("MessageList");
             }
-            return View();
+            await AddApiErrorsAsync(responseMessage);
+            return View(createMessageDto);
 
         }
 
+        [HttpPost]
         public async Task<IActionResult> DeleteMessage(int id)
         {
-            var client = _httpClientFactory.CreateClient();
-            await client.DeleteAsync("https://localhost:7192/api/Messages?id=" + id);
+            var client = _httpClientFactory.CreateClient("Api");
+            var responseMessage = await client.DeleteAsync("api/Messages?id=" + id);
+            if (!responseMessage.IsSuccessStatusCode) return StatusCode((int)responseMessage.StatusCode);
             return RedirectToAction("MessageList");
 
 
@@ -62,11 +65,12 @@ namespace ApiProjeKampi.WebUI.Controllers
         [HttpGet]
         public async Task<IActionResult> UpdateMessage(int id)
         {
-            var client = _httpClientFactory.CreateClient();
-            var responseMessage = await client.GetAsync("https://localhost:7192/api/Messages/GetById?id=" + id);
+            var client = _httpClientFactory.CreateClient("Api");
+            var responseMessage = await client.GetAsync("api/Messages/GetById?id=" + id);
+            if (!responseMessage.IsSuccessStatusCode) return StatusCode((int)responseMessage.StatusCode);
 
             var jsonData = await responseMessage.Content.ReadAsStringAsync();
-            var value = JsonConvert.DeserializeObject<GetMessageByIdDto>(jsonData);
+            var value = JsonConvert.DeserializeObject<UpdateMessageDto>(jsonData);
             return View(value);
 
 
@@ -74,13 +78,38 @@ namespace ApiProjeKampi.WebUI.Controllers
         [HttpPost]
         public async Task<IActionResult> UpdateMessage(UpdateMessageDto updateMessageDto)
         {
-            var client = _httpClientFactory.CreateClient();
+            var client = _httpClientFactory.CreateClient("Api");
             var jsonData = JsonConvert.SerializeObject(updateMessageDto);
             StringContent stringContent = new StringContent(jsonData, Encoding.UTF8, "application/json");
-            await client.PutAsync("https://localhost:7192/api/Messages", stringContent);
+            var responseMessage = await client.PutAsync("api/Messages", stringContent);
+            if (!responseMessage.IsSuccessStatusCode) { await AddApiErrorsAsync(responseMessage); return View(updateMessageDto); }
 
             return RedirectToAction("MessageList");
 
+        }
+        [HttpGet]
+        public async Task<IActionResult> OpenMessage(int id)
+        {
+            var response = await _httpClientFactory.CreateClient("Api").GetAsync("api/Messages/GetById?id=" + id);
+            if (response.StatusCode == System.Net.HttpStatusCode.NotFound) return NotFound();
+            response.EnsureSuccessStatusCode();
+            var message = await response.Content.ReadFromJsonAsync<GetMessageByIdDto>();
+            return View(message);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AnswerMessageWithOpenAI(int id, [FromServices] ApiProjeKampi.WebUI.Services.OpenAiService ai, CancellationToken cancellationToken)
+        {
+            var response = await _httpClientFactory.CreateClient("Api").GetAsync("api/Messages/GetById?id=" + id, cancellationToken);
+            if (response.StatusCode == System.Net.HttpStatusCode.NotFound) return NotFound();
+            response.EnsureSuccessStatusCode();
+            var message = await response.Content.ReadFromJsonAsync<GetMessageByIdDto>(cancellationToken: cancellationToken);
+            try
+            {
+                ViewBag.Answer = await ai.GenerateAsync("Mimmy restoranı adına müşterinin mesajına Türkçe, nazik ve kısa bir yanıt taslağı hazırla. Yapılmamış işlemleri yapılmış gibi söyleme ve bilmediğin bilgileri uydurma. HTML üretme.", message!.MessageDetails ?? "", cancellationToken);
+            }
+            catch (ApiProjeKampi.WebUI.Services.AiServiceException error) { ModelState.AddModelError("", error.Message); }
+            return View("OpenMessage", message);
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿@model List<ResultReservationDto>
+@model List<ResultReservationDto>
 @{
     ViewData["Title"] = "ReservationList";
     Layout = "~/Views/AdminLayout/Index.cshtml";
@@ -42,7 +42,7 @@
                                         <td>@item.ReservationStatus</td>
                                         <td>@item.PhoneNumber</td>
                                         <td>@item.ReservationTime</td>
-                                        <td><a href="/Reservation/DeleteReservation/@item.ReservationID/" class="btn btn-danger">Sil</a></td>
+                                        <td><form action="/Reservation/DeleteReservation/@item.ReservationID/" method="post" class="d-inline">@Html.AntiForgeryToken()<button type="submit" class="btn btn-danger">Sil</button></form></td>
                                         <td><a href="/Reservation/UpdateReservation/@item.ReservationID/" class="btn btn-primary">Güncelle</a></td>
                                         <td><a href="/Reservation/AcceptReservation/@item.ReservationID/" class="btn btn-success">Onayla</a></td>
                                         <td><a href="/Reservation/CancelReservation/@item.ReservationID/" class="btn btn-danger">İptal Et</a></td>

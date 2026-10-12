@@ -1,13 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using ApiProjeKampi.WebUI.Dtos.FeatureDtos;
+using Microsoft.AspNetCore.Mvc;
 
-namespace ApiProjeKampi.WebUI.ViewComponents
+namespace ApiProjeKampi.WebUI.ViewComponents;
+
+public class _FeatureDefaultComponentPartial(IHttpClientFactory httpClientFactory) : ViewComponent
 {
-    public class _FeatureDefaultComponentPartial: ViewComponent
+    public async Task<IViewComponentResult> InvokeAsync()
     {
-
-        public IViewComponentResult Invoke()
-        {
-            return View();
-        }
+        var values = await httpClientFactory.CreateClient("Api").GetFromJsonAsync<List<ResultFeatureDto>>("api/Features");
+        return View(values ?? new List<ResultFeatureDto>());
     }
 }
