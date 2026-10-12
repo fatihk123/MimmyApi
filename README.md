@@ -87,6 +87,24 @@ HTTPS sertifikası henüz güvenilir değilse `dotnet dev-certs https --trust` �
 
 API adresi `ApiProjeKampi.WebUI/appsettings.json` içindeki `Api:BaseUrl` ayarından veya `Api__BaseUrl` ortam değişkeninden değiştirilebilir.
 
+### Visual Studio ile iki projeyi birlikte çalıştırma
+
+API ve WebUI ayrı uygulamalardır ve aynı anda çalışmalıdır. Swagger'ı çalıştırıp oturumu durdurarak WebUI'ye geçmek, arayüzde bağlantı reddedildi hatasına yol açar.
+
+Solution Explorer'daki **ApiProjeKampi çözümüne** sağ tıklayın → **Configure Startup Projects / Başlangıç Projelerini Yapılandır** → **Multiple startup projects / Birden çok başlangıç projesi**:
+
+- `ApiProjeKampi.WebApi`: **Start / Başlat**
+- `ApiProjeKampi.WebUI`: **Start / Başlat**
+- `MimmyApi.Tests`: **None / Yok**
+
+Apply / Uygula sonrasında F5 ile ikisi birlikte açılır. API listede önce gelmelidir.
+
+Paylaşılabilir `ApiProjeKampi.slnLaunch` dosyası da aynı düzeni içerir. Visual Studio 2022 17.11 ve sonrasında Multi-Project Launch Profiles etkinse araç çubuğundan **Mimmy - API + WebUI** profilini seçebilirsiniz. Profil görünmüyorsa yukarıdaki standart başlangıç ayarını kullanın.
+
+Geliştirme ortamında WebUI, `http://localhost:5245/` API adresini kullanır. Bu port API'nin hem `http` hem `https` profilinde bulunur; HTTPS profili açıksa API isteği HTTPS'e yönlendirir.
+
+[Visual Studio resmi başlatma profili belgesi](https://learn.microsoft.com/en-us/visualstudio/ide/how-to-set-multiple-startup-projects)
+
 ### İsteğe bağlı örnek veriler
 
 Yeni ve boş veritabanında demo içerik oluşturmak için API'yi başlatmadan önce:

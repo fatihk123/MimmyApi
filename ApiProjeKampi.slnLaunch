@@ -1,0 +1,15 @@
+[
+  {
+    "Name": "Mimmy - API + WebUI",
+    "Projects": [
+      {
+        "Path": "ApiProjeKampi.WebApi\\ApiProjeKampi.WebApi.csproj",
+        "Action": "Start"
+      },
+      {
+        "Path": "ApiProjeKampi.WebUI\\ApiProjeKampi.WebUI.csproj",
+        "Action": "Start"
+      }
+    ]
+  }
+]
